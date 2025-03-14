@@ -34,7 +34,7 @@ Tailwind CSS (Styling)
 
 Clone the repository:
 
-git clone https://github.com/yourusername/react-firebase-blog.git
+git clone https://github.com/Kaue-Gomes/Blog.git
 
 Navigate to the project directory:
 
