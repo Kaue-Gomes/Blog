@@ -56,6 +56,7 @@ npm start
 
 Open http://localhost:3000 in your browser.
 
+deploy: https://kaue-gomes.github.io/Blog/
 🇧🇷 Português
 
 📝 Sobre o Projeto
@@ -90,7 +91,7 @@ Tailwind CSS (Estilização)
 
 Clone o repositório:
 
-git clone https://github.com/seunomeusuario/react-firebase-blog.git
+git clone https://github.com/Kaue-Gomes/Blog.git
 
 Acesse o diretório do projeto:
 
@@ -111,6 +112,8 @@ Inicie o servidor de desenvolvimento:
 npm start
 
 Abra http://localhost:3000 no seu navegador.
+
+deploy: https://kaue-gomes.github.io/Blog/
 
 💡 Sinta-se à vontade para contribuir e melhorar o projeto!
 
