@@ -14,12 +14,32 @@ export function useAuthBootstrap(): AuthBootstrapState {
 
   useEffect(() => {
     const auth = getFirebaseAuth();
-    const unsub = onAuthStateChanged(auth, (nextUser) => {
-      setUser(nextUser);
-      setLoading(false);
-    });
+    let alive = true;
 
-    return unsub;
+    const unsub = onAuthStateChanged(
+      auth,
+      (nextUser) => {
+        if (!alive) {
+          return;
+        }
+
+        setUser(nextUser);
+        setLoading(false);
+      },
+      () => {
+        if (!alive) {
+          return;
+        }
+
+        setUser(null);
+        setLoading(false);
+      }
+    );
+
+    return () => {
+      alive = false;
+      unsub();
+    };
   }, []);
 
   return { loading, user };

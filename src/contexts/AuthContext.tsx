@@ -4,6 +4,7 @@ import { createContext, useContext } from 'react';
 import type { User } from 'firebase/auth';
 
 export type AuthContextValue = {
+  loading: boolean;
   user: User | null;
 };
 

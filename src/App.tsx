@@ -35,7 +35,13 @@ function Fallback(): ReactElement {
   );
 }
 
-function AppRoutes({ user }: { user: User | null }): ReactElement {
+function AppRoutes({
+  loading,
+  user,
+}: {
+  loading: boolean;
+  user: User | null;
+}): ReactElement {
   const basename = useMemo(() => {
     const raw =
       typeof process.env.PUBLIC_URL === 'string' ? process.env.PUBLIC_URL : '/';
@@ -114,8 +120,8 @@ export default function App(): ReactElement {
 
   return (
     <div className="App">
-      <AuthProvider value={{ user }}>
-        <AppRoutes user={user} />
+      <AuthProvider value={{ loading, user }}>
+        <AppRoutes loading={loading} user={user} />
       </AuthProvider>
     </div>
   );

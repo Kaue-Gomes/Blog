@@ -39,7 +39,7 @@ export default function LoginPage(): ReactElement {
       loginWithEmailPassword(credentials),
     onSuccess: () => {
       toast.success('Sessão iniciada.');
-      navigate('/');
+      navigate('/', { replace: true });
     },
 
     onError: (mutationError: unknown) => {
@@ -51,6 +51,10 @@ export default function LoginPage(): ReactElement {
   });
 
   const onSubmit = (values: LoginFormValues): void => {
+    if (loginMutation.isLoading) {
+      return;
+    }
+
     loginMutation.mutate({
       email: values.email.trim().toLowerCase(),
       password: values.password,
@@ -89,13 +93,9 @@ export default function LoginPage(): ReactElement {
           error={errors.password?.message}
         />
 
-        {!loginMutation.isLoading ? (
-          <Button type="submit">Entrar agora</Button>
-        ) : (
-          <Button type="button" disabled>
-            Aguarde…
-          </Button>
-        )}
+        <Button type="submit" disabled={loginMutation.isLoading}>
+          {loginMutation.isLoading ? 'Entrando...' : 'Entrar agora'}
+        </Button>
 
         <p className={styles.footer}>
           Ainda não tem conta?{' '}

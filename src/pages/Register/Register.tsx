@@ -44,7 +44,7 @@ export default function RegisterPage(): ReactElement {
     mutationFn: (data: RegisterInput) => registerWithEmailPassword(data),
     onSuccess: () => {
       toast.success('Conta criada. Bora publicar?');
-      navigate('/posts/create');
+      navigate('/posts/create', { replace: true });
     },
     onError: (mutationError: unknown) => {
       toast.error(
@@ -55,6 +55,10 @@ export default function RegisterPage(): ReactElement {
   });
 
   const onSubmit = (values: RegisterFormValues): void => {
+    if (registerMutation.isLoading) {
+      return;
+    }
+
     registerMutation.mutate({
       displayName: values.displayName.trim(),
       email: values.email.trim().toLowerCase(),
@@ -111,13 +115,9 @@ export default function RegisterPage(): ReactElement {
           error={errors.confirmPassword?.message}
         />
 
-        {!registerMutation.isLoading ? (
-          <Button type="submit">Criar conta</Button>
-        ) : (
-          <Button type="button" disabled>
-            Salvando...
-          </Button>
-        )}
+        <Button type="submit" disabled={registerMutation.isLoading}>
+          {registerMutation.isLoading ? 'Salvando...' : 'Criar conta'}
+        </Button>
 
         <p className={styles.footer}>
           Já tem conta?{' '}

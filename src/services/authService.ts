@@ -77,7 +77,13 @@ export function translateAuthMessage(error: unknown): string | null {
       return 'Usuário não encontrado.';
     case 'auth/wrong-password':
     case 'auth/invalid-credential':
-      return 'Senha incorreta.';
+      return 'E-mail ou senha incorretos.';
+    case 'auth/operation-not-allowed':
+      return 'Login com e-mail e senha está desativado no Firebase.';
+    case 'auth/too-many-requests':
+      return 'Muitas tentativas. Aguarde um pouco e tente novamente.';
+    case 'auth/network-request-failed':
+      return 'Falha de rede ao conectar com o Firebase.';
     default:
       return 'Ocorreu um erro. Tente mais tarde.';
   }
