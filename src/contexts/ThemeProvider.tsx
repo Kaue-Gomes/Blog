@@ -13,17 +13,6 @@ export type ResolvedThemeMode = 'light' | 'dark';
 const STORAGE_KEY_MODE = 'miniblog-theme-mode';
 const STORAGE_KEY_MANUAL = 'miniblog-theme-manual';
 
-function prefersDark(): boolean {
-  if (
-    typeof window === 'undefined' ||
-    typeof window.matchMedia !== 'function'
-  ) {
-    return false;
-  }
-
-  return window.matchMedia('(prefers-color-scheme: dark)').matches;
-}
-
 function resolveInitialBoot(): ResolvedThemeMode {
   if (typeof window === 'undefined') {
     return 'light';
@@ -42,7 +31,7 @@ function resolveInitialBoot(): ResolvedThemeMode {
     /** storage indisponível */
   }
 
-  return prefersDark() ? 'dark' : 'light';
+  return 'light';
 }
 
 export function hydrateThemeBootstrap(): void {
@@ -83,8 +72,7 @@ export function ThemeProvider({
       }
 
       const media = window.matchMedia('(prefers-color-scheme: dark)');
-      const listener = (): void =>
-        void setMode(media.matches ? 'dark' : 'light');
+      const listener = (): void => void setMode('light');
 
       media.addEventListener('change', listener);
       return () => media.removeEventListener('change', listener);

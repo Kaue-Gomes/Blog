@@ -17,14 +17,12 @@ export default function Search(): ReactElement {
   return (
     <div className={styles.search_container}>
       <header>
+        <p className={styles.eyebrow}>Busca</p>
         <h1 aria-live="polite">
-          Resultados para:{' '}
-          <span aria-label="termo de busca">{q || '(sem termo)'}</span>
+          Resultados para <span aria-label="termo de busca">{q || '...'}</span>
         </h1>
         <p className={styles.help}>
-          Esta busca procura texto no corpo ou título (client-side sobre os
-          lotes já carregados). Para coleções grandes, evoluir para Algolia ou
-          Cloud Functions.
+          Esta busca procura texto no corpo ou título dos posts já carregados.
         </p>
       </header>
 
@@ -36,7 +34,9 @@ export default function Search(): ReactElement {
               <SkeletonCard key={`sk_search_${String(i)}`} />
             ))}
 
-            <Spinner label="Buscando…" />
+            <div className={styles.search_loading}>
+              <Spinner label="Buscando..." />
+            </div>
           </>
         )}
 
@@ -47,20 +47,19 @@ export default function Search(): ReactElement {
         ) : null}
 
         {!isLoading && q.trim() !== '' && data.length === 0 ? (
-          <>
+          <div className={styles.empty}>
             <p>Não foram encontrados posts compatíveis com a pesquisa.</p>
 
-            <Link to="/" className="btn btn-dark">
+            <Link to="/" className="btn btn-outline">
               Voltar ao início
             </Link>
-          </>
+          </div>
         ) : null}
 
         {!isLoading && q.trim() === '' ? (
-          <p>
-            Adicione <code>?q=</code>
-            ao URL ou use o campo na Home.
-          </p>
+          <div className={styles.empty}>
+            <p>Use o campo de busca da Home para encontrar posts.</p>
+          </div>
         ) : null}
 
         {!isLoading &&

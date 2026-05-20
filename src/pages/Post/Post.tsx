@@ -7,7 +7,25 @@ import { useBlogPost } from '../../hooks/usePostsQueries';
 import { PostBodyDisplay } from '../../components/content/PostBodyDisplay';
 import styles from './Post.module.css';
 import { SkeletonPage } from '../../components/ui/Skeleton';
-import { Spinner } from '../../components/ui/Spinner';
+
+function estimateReadTime(body: string): string {
+  const plain = body.replace(/<[^>]+>/g, ' ');
+  const words = plain.trim().split(/\s+/).filter(Boolean).length;
+  return `${Math.max(1, Math.ceil(words / 200))} min de leitura`;
+}
+
+function formatDate(dateLike: { toDate?: () => Date }): string {
+  const date = dateLike.toDate?.();
+  if (!(date instanceof Date)) {
+    return 'Publicado recentemente';
+  }
+
+  return new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  }).format(date);
+}
 
 export default function PostPage(): ReactElement {
   const { id } = useParams();
@@ -48,21 +66,7 @@ export default function PostPage(): ReactElement {
         )}
       </Helmet>
 
-      {isLoading && (
-        <>
-          <SkeletonPage rows={8} />
-
-          <div
-            style={{
-              display: 'grid',
-              justifyItems: 'center',
-              gap: '0.75rem',
-            }}
-          >
-            <Spinner />
-          </div>
-        </>
-      )}
+      {isLoading && <SkeletonPage rows={8} />}
 
       {error instanceof Error ? (
         <p className="error" role="alert">
@@ -72,24 +76,32 @@ export default function PostPage(): ReactElement {
 
       {!isLoading && post && (
         <article aria-labelledby={`post-heading-${post.id}`}>
-          <h1 id={`post-heading-${post.id}`}>{post.title}</h1>
+          <div className={styles.progress} aria-hidden />
 
-          <p className={styles.createdby}>por {post.createdBy}</p>
+          <header className={styles.post_header}>
+            <p className={styles.category}>{post.tags[0] ?? 'Geral'}</p>
+            <h1 id={`post-heading-${post.id}`}>{post.title}</h1>
 
-          <img src={post.image} alt={post.title} loading="lazy" />
+            <div className={styles.byline}>
+              <span>{post.createdBy}</span>
+              <span>{formatDate(post.createdAt)}</span>
+              <span>{estimateReadTime(post.body)}</span>
+            </div>
+          </header>
+
+          {post.image ? <img src={post.image} alt="" loading="lazy" /> : null}
 
           <PostBodyDisplay body={post.body} />
 
-          <h3>Este post fala sobre</h3>
+          <footer className={styles.tags_block}>
+            <h2>Este post fala sobre</h2>
 
-          <div className={styles.tags}>
-            {post.tags.map((tag) => (
-              <p key={tag}>
-                <span>#</span>
-                {tag}
-              </p>
-            ))}
-          </div>
+            <div className={styles.tags}>
+              {post.tags.map((tag) => (
+                <span key={tag}>#{tag}</span>
+              ))}
+            </div>
+          </footer>
         </article>
       )}
     </div>
