@@ -1,0 +1,71 @@
+.lines {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+}
+
+.line {
+  height: 12px;
+  border-radius: 999px;
+  background: rgb(226 232 240 / 0.9);
+}
+
+.pulse {
+  animation: sk-pulse 1.35s ease-in-out infinite alternate;
+  background: linear-gradient(
+    90deg,
+    rgb(226 232 240 / 0.75),
+    rgb(226 232 240 / 0.35),
+    rgb(226 232 240 / 0.75)
+  );
+  background-size: 200% auto;
+}
+
+@keyframes sk-pulse {
+  from {
+    background-position-x: 0%;
+  }
+
+  to {
+    background-position-x: 100%;
+  }
+}
+
+.card_shell {
+  display: grid;
+  gap: 14px;
+  padding: 1rem 1.1rem;
+  margin-bottom: 1.75rem;
+  border-radius: 12px;
+  border: 1px solid rgb(226 232 240 / 0.9);
+  background: rgb(248 250 252 / 0.9);
+}
+
+.thumb {
+  width: min(560px, 100%);
+  height: 230px;
+  border-radius: 10px;
+}
+
+.short {
+  width: 72%;
+  height: 28px;
+  border-radius: 8px;
+}
+
+.btn_placeholder {
+  width: 150px;
+  height: 40px;
+  border-radius: 999px;
+}
+
+.page {
+  display: grid;
+  gap: 1rem;
+}
+
+.h1_placeholder {
+  width: 70%;
+  height: 32px;
+  border-radius: 10px;
+}

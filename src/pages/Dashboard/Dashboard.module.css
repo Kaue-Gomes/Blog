@@ -16,6 +16,15 @@
   margin-bottom: 1em;
 }
 
+.slug {
+  font-size: 0.875rem;
+  margin-block: -0.25rem 1rem;
+}
+
+.slug a {
+  text-decoration: underline;
+}
+
 .noposts {
   text-align: center;
 }
@@ -48,6 +57,13 @@
 
 .post_row p {
   color: #000;
+}
+
+.actions {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .post_row button,

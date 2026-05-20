@@ -1,0 +1,110 @@
+rules_version = '2';
+
+/**
+ * Posts: leitura pública (blog aberto).
+ * Escrita apenas autenticada; dados.uid deve coincidir com o usuário da sessão.
+ * Valida tipo/tamanho de campos (mitiga payloads abusivos).
+ *
+ * Para rate limiting por tempo consistente sem Cloud Functions:
+ * usar doc auxiliar atualizado em batch ao criar posts (planejado no postService)
+ * ou impor quotas via Firebase App Check + quotas no backend.
+ */
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function allowedPostKeys() {
+      return request.resource.data.keys()
+        .hasOnly(['uid', 'title', 'body', 'image', 'tags', 'createdBy', 'createdAt']);
+    }
+
+    function isOwnerUid(data) {
+      return isSignedIn()
+        && allowedPostKeys()
+        && data.keys().hasAll(['uid', 'title', 'body', 'image', 'tags', 'createdBy', 'createdAt'])
+        && data.uid is string
+        && data.uid == request.auth.uid;
+    }
+
+    function titleOk() {
+      return request.resource.data.title is string
+        && request.resource.data.title.size() > 0
+        && request.resource.data.title.size() <= 200;
+    }
+
+    function bodyOk() {
+      return request.resource.data.body is string
+        && request.resource.data.body.size() > 0
+        && request.resource.data.body.size() <= 120000;
+    }
+
+    function imageOk() {
+      return request.resource.data.image is string
+        && request.resource.data.image.size() > 0
+        && request.resource.data.image.size() <= 2048;
+    }
+
+    function tagsOk() {
+      return request.resource.data.tags is list
+        && request.resource.data.tags.size() <= 30
+        && request.resource.data.tags.size() > 0;
+    }
+
+    function createdByOk() {
+      return request.resource.data.createdBy is string
+        && request.resource.data.createdBy.size() <= 128;
+    }
+
+    /** Exige que displayName público não mude ao editar (mitiga spoofing mantendo texto original). */
+    function createdByStableOnUpdate() {
+      return request.resource.data.createdBy == resource.data.createdBy;
+    }
+
+    /** createdAt: Timestamp enviado pelo cliente próximo ao request.time (clock skew ± 5min) */
+    function createdAtOk() {
+      return request.resource.data.createdAt is timestamp
+        && request.resource.data.createdAt >= request.time - duration.value(5, 'm')
+        && request.resource.data.createdAt <= request.time + duration.value(5, 'm');
+    }
+
+    /** Em updates não permitimos mudar proprietário nem createdAt/origens imutáveis */
+    function postUpdatePayloadOk() {
+      return allowedPostKeys()
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.createdAt == resource.data.createdAt
+        && createdByStableOnUpdate()
+        && titleOk()
+        && bodyOk()
+        && imageOk()
+        && tagsOk();
+    }
+
+    match /posts/{postId} {
+      allow read: if true;
+
+      allow create: if isSignedIn()
+        && isOwnerUid(request.resource.data)
+        && titleOk()
+        && bodyOk()
+        && imageOk()
+        && tagsOk()
+        && createdAtOk()
+        && createdByOk();
+
+      allow update: if isSignedIn()
+        && resource.data.uid == request.auth.uid
+        && postUpdatePayloadOk();
+
+      allow delete: if isSignedIn()
+        && resource.data.uid == request.auth.uid;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

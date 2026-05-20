@@ -5,3 +5,13 @@
 .login p {
   color: #aaa;
 }
+
+.footer {
+  font-size: 0.875rem;
+  margin-top: 1rem;
+  color: #6b7280;
+}
+
+.anchor {
+  text-decoration: underline;
+}

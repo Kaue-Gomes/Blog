@@ -1,120 +1,84 @@
-Blog em React com Firebase
+﻿## Miniblog â€” React + Firebase (TypeScript)
 
-🌍 English
+SPA hospedada no GitHub Pages (`homepage` jÃ¡ define o sub-path `/Blog/`).
 
-📝 About the Project
+### Principais tecnologias
 
-This is a modern blog application built with React for the frontend and Firebase for authentication and database management. The platform allows users to register, log in, create, edit, and delete posts, providing a seamless and engaging blogging experience.
+- Create React App + TypeScript estrito (`tsconfig`)
+- Firebase Auth / Firestore (SDK modular v10)
+- TanStack Query (cache/refetch das coleÃ§Ãµes paginadas)
+- React Hook Form + Zod
+- Vitest smoke + GitHub Actions
+- Husky + lint-staged (Prettier)
+- Firebase Security Rules + Ã­ndices versionados no repo
 
-🚀 Features
+### Arquitetura (visÃ£o rÃ¡pida)
 
-🔐 User authentication (Login & Register)
+```mermaid
+flowchart LR
+ subgraph client [CRA React]
+   UI[PÃ¡ginas e UI]
+   SVC[services/auth + posts]
+ end
+ subgraph fb [Firebase]
+   AuthSvc[Firebase Auth]
+   FS[Firestore]
+ end
+ UI --> SVC
+ SVC --> AuthSvc
+ SVC --> FS
+```
 
-🏠 Interactive dashboard
+Fluxo tÃ­pico: componentes chamam hooks â†’ hooks usam TanStack Query â†’ chamadas ficam encapsuladas em `services/` (sem SDK espalhado na UI).
 
-📝 Post creation, editing, and deletion
+### PrÃ©-requisitos
 
-💾 Cloud database with Firebase Firestore
+1. Node 20 LTS (vide `.nvmrc`).
+2. Conta/projeto Firebase (Auth Email/Senha + Firestore modo produÃ§Ã£o apenas apÃ³s revisar Rules).
+3. Instalar Firebase CLI apenas se quiser publicar Rules: `npm install -g firebase-tools`.
 
-🎨 Responsive and modern UI
+### ConfiguraÃ§Ã£o rÃ¡pida
 
-🔍 Real-time updates
-
-🛠️ Technologies Used
-
-React (Frontend framework)
-
-Firebase (Backend, authentication, and database)
-
-React Router (Navigation)
-
-Tailwind CSS (Styling)
-
-📦 Installation & Setup
-
-Clone the repository:
-
-git clone https://github.com/Kaue-Gomes/Blog.git
-
-Navigate to the project directory:
-
-cd react-firebase-blog
-
-Install dependencies:
-
+```bash
 npm install
-
-Create a .env file and configure Firebase credentials:
-
-REACT_APP_FIREBASE_API_KEY=your_api_key
-REACT_APP_FIREBASE_AUTH_DOMAIN=your_auth_domain
-REACT_APP_FIREBASE_PROJECT_ID=your_project_id
-
-Start the development server:
-
+cp .env.example .env.local # preencha com valores reais da consola Firebase
 npm start
+npm run build    # garante gates similares ao CI quando envs estÃ£o vÃ¡lidas
+npm run test:unit
+```
 
-Open http://localhost:3000 in your browser.
+Consulte sempre [`docs/FIREBASE_SETUP.md`](./docs/FIREBASE_SETUP.md) para deploy de Rules/App Check/CSP/dual projeto.
 
-deploy: https://kaue-gomes.github.io/Blog/
-🇧🇷 Português
+### Qualidade automatizada
 
-📝 Sobre o Projeto
+- `npm run test:unit` â€” Vitest cobre helpers puros primeiro.
+- `npm test` â€” Jest CRA (opcional quando quiser cenÃ¡rios legados React).
+- `npm run prepare` â€” instala Husky (executado apÃ³s `npm install`).
+- GitHub Actions `.github/workflows/ci.yml` replica `npm ci â†’ test:unit â†’ build` com placeholders de Firebase.
 
-Este é um blog moderno desenvolvido com React para o frontend e Firebase para autenticação e gerenciamento de banco de dados. A plataforma permite que os usuários se cadastrem, façam login, criem, editem e excluam posts, oferecendo uma experiência fluida e envolvente.
+### Roadmap destacado / backlog
 
-🚀 Funcionalidades
+Consulte [`docs/CHECKLIST.md`](./docs/CHECKLIST.md) e [`CHANGELOG.md`](./CHANGELOG.md). Itens conscientemente adiados: editor rico (Tiptap), Next.js SSR, App Check obrigatÃ³rio em produÃ§Ã£o, pipelines de deploy automÃ¡ticos quando decidir hospedagem alÃ©m de GH Pages.
 
-🔐 Autenticação de usuários (Login & Cadastro)
+### Capturas sugeridas (para README)
 
-🏠 Dashboard interativo
+Substitua estes marcadores antes de portfolio pÃºblico:
 
-📝 Criação, edição e exclusão de posts
+1. Lista de posts (tema claro).
+2. PÃ¡gina individual com OG tags geradas pelo `react-helmet-async`.
 
-💾 Banco de dados em nuvem com Firebase Firestore
+### Deploy rÃ¡pido (GitHub Pages existente)
 
-🎨 Interface responsiva e moderna
+`npm run deploy` continua a usar `gh-pages` quando `homepage` configurado â€” **lembre**: variÃ¡veis `REACT_APP_*` tÃªm de existir durante `npm run build` (idealmente secrets do GitHub Actions se automatizar esta etapa).
 
-🔍 Atualizações em tempo real
+### SeguranÃ§a
 
-🛠️ Tecnologias Utilizadas
+- Credenciais nunca devem regressar ao Git.
+- Defence real em Firestore acontece nas Rules (`firestore.rules`); faÃ§a sempre `firebase deploy --only firestore:rules`.
 
-React (Framework frontend)
+---
 
-Firebase (Backend, autenticação e banco de dados)
+<details>
+<summary>InglÃªs (resumo tÃ©cnico)</summary>
 
-React Router (Navegação)
-
-Tailwind CSS (Estilização)
-
-📦 Instalação & Configuração
-
-Clone o repositório:
-
-git clone https://github.com/Kaue-Gomes/Blog.git
-
-Acesse o diretório do projeto:
-
-cd react-firebase-blog
-
-Instale as dependências:
-
-npm install
-
-Crie um arquivo .env e configure as credenciais do Firebase:
-
-REACT_APP_FIREBASE_API_KEY=sua_api_key
-REACT_APP_FIREBASE_AUTH_DOMAIN=seu_auth_domain
-REACT_APP_FIREBASE_PROJECT_ID=seu_project_id
-
-Inicie o servidor de desenvolvimento:
-
-npm start
-
-Abra http://localhost:3000 no seu navegador.
-
-deploy: https://kaue-gomes.github.io/Blog/
-
-💡 Sinta-se à vontade para contribuir e melhorar o projeto!
-
-📌 Autor: Kauê Gomes | GitHub
+React SPA with Firebase modular SDK, hardened Firestore Rules, TanStack Query, Zod validations, GH Actions CI, Vitest starter tests, husky prettier hook, SPA SEO limited by lack of SSR (Next migration documented). Always deploy rules after schema changes.</details>

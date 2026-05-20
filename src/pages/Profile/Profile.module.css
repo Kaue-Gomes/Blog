@@ -1,0 +1,50 @@
+.shell {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.avatar {
+  width: 92px;
+  height: 92px;
+  border-radius: 999px;
+  background: #688bff;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.meta h1 {
+  margin: 0 0 0.35rem;
+}
+
+.uid {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.mono {
+  font-family: Menlo, Consolas, 'SFMono-Regular', monospace;
+  font-size: 0.75rem;
+  word-break: break-all;
+  margin-block: 0 0.75rem;
+  color: #111827;
+}
+
+.section {
+  margin-bottom: 2.75rem;
+}
+
+.controls {
+  text-align: center;
+  margin-top: 1.5rem;
+}

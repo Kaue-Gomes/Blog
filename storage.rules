@@ -1,0 +1,13 @@
+rules_version = '2';
+
+/**
+ * Storage reservado para uploads futuros (capas via Firebase Storage).
+ * Negar até haver política por prefixo/collection e validação MIME/tamanho.
+ */
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{path=**} {
+      allow read, write: if false;
+    }
+  }
+}

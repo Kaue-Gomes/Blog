@@ -1,0 +1,10 @@
+.post_body_rich {
+  text-align: left;
+  margin: 0 auto;
+  max-width: 760px;
+  line-height: 1.65;
+}
+
+.post_body_rich a {
+  word-break: break-word;
+}

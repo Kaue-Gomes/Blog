@@ -2,6 +2,12 @@
   text-align: center;
 }
 
+.createdby {
+  font-size: 0.95rem;
+  color: #4b5563;
+  margin-block: 0.35rem;
+}
+
 .post_container h3 {
   margin-bottom: 0.2em;
 }
@@ -13,8 +19,4 @@
 
 .tags p {
   margin-right: 1em;
-}
-
-.tags span {
-  font-weight: bold;
 }
